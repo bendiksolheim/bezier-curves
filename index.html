@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Title</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<style type="text/css">
+		/* Regular */
+		@font-face {
+		    font-family: 'League Gothic';
+		    src: url('leaguegothic/leaguegothic-italic-webfont.eot');
+		    src: url('leaguegothic/leaguegothic-italic-webfont.eot?#iefix') format('embedded-opentype'),
+		         url('leaguegothic/leaguegothic-italic-webfont.woff') format('woff'),
+		         url('leaguegothic/leaguegothic-italic-webfont.ttf') format('truetype'),
+		         url('leaguegothic/leaguegothic-italic-webfont.svg#league_gothic_italicregular') format('svg');
+		    font-weight: normal;
+		    font-style: italic;
+
+		}
+
+		/* Italic */
+		@font-face {
+		    font-family: 'League Gothic';
+		    src: url('leaguegothic/leaguegothic-regular-webfont.eot');
+		    src: url('leaguegothic/leaguegothic-regular-webfont.eot?#iefix') format('embedded-opentype'),
+		         url('leaguegothic/leaguegothic-regular-webfont.woff') format('woff'),
+		         url('leaguegothic/leaguegothic-regular-webfont.ttf') format('truetype'),
+		         url('leaguegothic/leaguegothic-regular-webfont.svg#league_gothicregular') format('svg');
+		    font-weight: normal;
+		    font-style: normal;
+
+		}
+
+		/* Condensed */
+		@font-face {
+		    font-family: 'League Gothic Condensed';
+		    src: url('leaguegothic/leaguegothic-condensed-regular-webfont.eot');
+		    src: url('leaguegothic/leaguegothic-condensed-regular-webfont.eot?#iefix') format('embedded-opentype'),
+		         url('leaguegothic/leaguegothic-condensed-regular-webfont.woff') format('woff'),
+		         url('leaguegothic/leaguegothic-condensed-regular-webfont.ttf') format('truetype'),
+		         url('leaguegothic/leaguegothic-condensed-regular-webfont.svg#league_gothic_condensed-Rg') format('svg');
+		    font-weight: normal;
+		    font-style: normal;
+
+		}
+
+		/* Condensed Italic */
+		@font-face {
+		    font-family: 'League Gothic Condensed';
+		    src: url('leaguegothic/leaguegothic-condensed-italic-webfont.eot');
+		    src: url('leaguegothic/leaguegothic-condensed-italic-webfont.eot?#iefix') format('embedded-opentype'),
+		         url('leaguegothic/leaguegothic-condensed-italic-webfont.woff') format('woff'),
+		         url('leaguegothic/leaguegothic-condensed-italic-webfont.ttf') format('truetype'),
+		         url('leaguegothic/leaguegothic-condensed-italic-webfont.svg#league_gothic_condensed_itaRg') format('svg');
+		    font-weight: normal;
+		    font-style: italic;
+		}
+
+			body {
+				font-family: 'League Gothic Condensed';
+			}
+			h1, h2, h3 {
+				font-family: 'League Gothic';
+				font-weight: normal;
+			}
+
+			.remark-slide-content {
+				background: #111111;
+				color: #eee;
+			}
+
+			.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+		</style>
+	</head>
+	<body>
+		<textarea id="source">
+
+		class: center, middle
+
+		# Bézier-kurver
+
+		<canvas width="500" height="500" id="c0"></canvas>
+
+		---
+
+		class: center, middle
+
+		# Enkleste kurve
+
+		<canvas width="500" height="500" id="c1"></canvas>
+
+		---
+
+		class: center, middle
+
+		# Quadratic Bézier curve
+
+		<canvas width="500" height="500" id="c2"></canvas>
+
+		---
+
+		class: center, middle
+
+		# Cubiz Bézier curve
+
+		<canvas width="500" height="500" id="c3"></canvas>
+
+		</textarea>
+		<script src="remark-0.10.2/out/remark.min.js">
+		</script>
+		<script src="bezier.js"></script>
+		<script>
+		var slideshow = remark.create({
+		});
+		slideshow.on('showSlide', function(slide) {
+			var index = slide.getSlideIndex();
+			if (index == 0)
+				slideOne(index, slide);
+
+			if (index == 1)
+				slideTwo(index, slide);
+
+			if (index == 2)
+				slideThree(index, slide);
+
+			if (index == 3)
+				slideFour(index, slide);
+		});
+		slideshow.on('hideSlide', function(slide) {
+			if (slide.bezier) {
+				slide.bezier.invalidate();
+				delete slide.bezier;
+			}
+		});
+
+		function slideOne(index, slide) {
+			var canvas = document.querySelector("#c" + index);
+			if (!canvas)
+				return;
+
+			var points = [P(100, 400), P(100, 100), P(400, 400), P(400, 100)];
+			slide.bezier = new Bezier(canvas);
+			slide.bezier.draw(points);
+		}
+
+		function slideTwo(index, slide) {
+			var canvas = document.querySelector("#c" + index);
+			if (!canvas)
+				return;
+
+			var points = [P(100, 400), P(400, 100)];
+			slide.bezier = new Bezier(canvas);
+			slide.bezier.draw(points);
+		}
+
+		function slideThree(index, slide) {
+			var canvas = document.querySelector("#c" + index);
+			if (!canvas)
+				return;
+
+			var points = [P(100, 400), P(100, 100), P(400, 100)];
+			slide.bezier = new Bezier(canvas);
+			slide.bezier.draw(points);
+		}
+
+		function slideFour(index, slide) {
+			var canvas = document.querySelector("#c" + index);
+			if (!canvas)
+				return;
+
+			var points = [P(100, 400), P(100, 100), P(400, 400), P(400, 100)];
+			slide.bezier = new Bezier(canvas);
+			slide.bezier.draw(points);	
+		}
+		</script>
+	</body>
+</html>

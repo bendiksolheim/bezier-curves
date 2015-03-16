@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bezier test</title>
+	<style type="text/css">
+		body {
+			background: #111111;
+		}
+
+		canvas {
+			background: #111111;
+			border: 1px solid white;
+			outline: 0;
+		}
+	</style>
+</head>
+<body>
+<canvas width="500" height="500" tabindex="-1"></canvas>
+<script src="bezier.js"></script>
+<script type="text/javascript">
+
+	var canvas = document.querySelector('canvas');
+	// var points = [P(100, 250), P(250, 100), P(400, 250), P(550, 100), P(700, 250)];
+	var p = [P(100, 400), P(100, 100), P(400, 400), P(400, 100)];
+	var bezier = new Bezier(canvas);
+	bezier.draw(p);
+</script>
+</body>
+</html>

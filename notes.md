@@ -1,0 +1,2 @@
+- Består av N antall punkter, hvor N er et naturlig tall større enn eller lik 2
+- Starter alltid i P0, og ender i PN.
