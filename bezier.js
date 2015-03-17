@@ -71,12 +71,15 @@
 		paintCurve(this, supportPoints);
 	}
 
-	function Bezier(canvas) {
+	function Bezier(canvas, showOnlyOddLines) {
+		if (typeof showOnlyOddLines === 'undefined')
+			showOnlyOddLines = true;
+
 		this.canvas = canvas;
 		this.ctx = canvas.getContext('2d');
 		this.showPoints = true;
 		this.showLines = true;
-		this.showOnlyOddLines = true;
+		this.showOnlyOddLines = showOnlyOddLines;
 	}
 
 	Bezier.prototype.draw = function(points) {
@@ -109,8 +112,8 @@
 
 	Bezier.prototype.drawScene = function() {
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-			this.ctx.lineWidth = 3;
-			this.ctx.strokeStyle = '#297f79';
+			this.ctx.lineWidth = 5;
+			this.ctx.strokeStyle = '#5F505B';
 			if (this.showLines)
 				this.drawLines();
 
@@ -123,12 +126,12 @@
 	Bezier.prototype.drawPoints = function() {
 		var ctx = this.ctx;
 		ctx.save();
-		ctx.fillStyle = "#fd5158";
+		ctx.fillStyle = "#398999";
 		ctx.beginPath();
 
 		this.points.forEach(function(point) {
 			ctx.moveTo(point.x, point.y);
-			ctx.arc(point.x, point.y, 5, 0, 2*Math.PI, false);
+			ctx.arc(point.x, point.y, 7, 0, 2*Math.PI, false);
 		});
 
 		ctx.fill();

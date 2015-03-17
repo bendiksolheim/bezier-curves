@@ -1,71 +1,20 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Title</title>
+		<title>Bézier Curves</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<style type="text/css">
-		/* Regular */
-		@font-face {
-		    font-family: 'League Gothic';
-		    src: url('leaguegothic/leaguegothic-italic-webfont.eot');
-		    src: url('leaguegothic/leaguegothic-italic-webfont.eot?#iefix') format('embedded-opentype'),
-		         url('leaguegothic/leaguegothic-italic-webfont.woff') format('woff'),
-		         url('leaguegothic/leaguegothic-italic-webfont.ttf') format('truetype'),
-		         url('leaguegothic/leaguegothic-italic-webfont.svg#league_gothic_italicregular') format('svg');
-		    font-weight: normal;
-		    font-style: italic;
-
-		}
-
-		/* Italic */
-		@font-face {
-		    font-family: 'League Gothic';
-		    src: url('leaguegothic/leaguegothic-regular-webfont.eot');
-		    src: url('leaguegothic/leaguegothic-regular-webfont.eot?#iefix') format('embedded-opentype'),
-		         url('leaguegothic/leaguegothic-regular-webfont.woff') format('woff'),
-		         url('leaguegothic/leaguegothic-regular-webfont.ttf') format('truetype'),
-		         url('leaguegothic/leaguegothic-regular-webfont.svg#league_gothicregular') format('svg');
-		    font-weight: normal;
-		    font-style: normal;
-
-		}
-
-		/* Condensed */
-		@font-face {
-		    font-family: 'League Gothic Condensed';
-		    src: url('leaguegothic/leaguegothic-condensed-regular-webfont.eot');
-		    src: url('leaguegothic/leaguegothic-condensed-regular-webfont.eot?#iefix') format('embedded-opentype'),
-		         url('leaguegothic/leaguegothic-condensed-regular-webfont.woff') format('woff'),
-		         url('leaguegothic/leaguegothic-condensed-regular-webfont.ttf') format('truetype'),
-		         url('leaguegothic/leaguegothic-condensed-regular-webfont.svg#league_gothic_condensed-Rg') format('svg');
-		    font-weight: normal;
-		    font-style: normal;
-
-		}
-
-		/* Condensed Italic */
-		@font-face {
-		    font-family: 'League Gothic Condensed';
-		    src: url('leaguegothic/leaguegothic-condensed-italic-webfont.eot');
-		    src: url('leaguegothic/leaguegothic-condensed-italic-webfont.eot?#iefix') format('embedded-opentype'),
-		         url('leaguegothic/leaguegothic-condensed-italic-webfont.woff') format('woff'),
-		         url('leaguegothic/leaguegothic-condensed-italic-webfont.ttf') format('truetype'),
-		         url('leaguegothic/leaguegothic-condensed-italic-webfont.svg#league_gothic_condensed_itaRg') format('svg');
-		    font-weight: normal;
-		    font-style: italic;
-		}
-
 			body {
-				font-family: 'League Gothic Condensed';
+				font-family: 'Futura';
 			}
 			h1, h2, h3 {
-				font-family: 'League Gothic';
+				font-family: 'Futura';
 				font-weight: normal;
 			}
 
 			.remark-slide-content {
-				background: #111111;
-				color: #eee;
+				background: #F5EAD8;
+				color: #398999;
 			}
 
 			.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
@@ -74,17 +23,15 @@
 	<body>
 		<textarea id="source">
 
+		layout: true
+
 		class: center, middle
-
-		# Bézier-kurver
-
-		<canvas width="500" height="500" id="c0"></canvas>
 
 		---
 
-		class: center, middle
+		# Bezier-kurver
 
-		# Enkleste kurve
+		---
 
 		<canvas width="500" height="500" id="c1"></canvas>
 
@@ -92,17 +39,19 @@
 
 		class: center, middle
 
-		# Quadratic Bézier curve
-
 		<canvas width="500" height="500" id="c2"></canvas>
 
 		---
 
 		class: center, middle
 
-		# Cubiz Bézier curve
-
 		<canvas width="500" height="500" id="c3"></canvas>
+
+		---
+
+		class: center, middle
+
+		<canvas width="500" height="500" id="c4"></canvas>
 
 		</textarea>
 		<script src="remark.min.js">
@@ -110,19 +59,20 @@
 		<script src="bezier.js"></script>
 		<script>
 		var slideshow = remark.create({
+			ratio: "16:9"
 		});
 		slideshow.on('showSlide', function(slide) {
 			var index = slide.getSlideIndex();
-			if (index == 0)
+			if (index == 1)
 				slideOne(index, slide);
 
-			if (index == 1)
+			if (index == 2)
 				slideTwo(index, slide);
 
-			if (index == 2)
+			if (index == 3)
 				slideThree(index, slide);
 
-			if (index == 3)
+			if (index == 4)
 				slideFour(index, slide);
 		});
 		slideshow.on('hideSlide', function(slide) {
@@ -137,7 +87,7 @@
 			if (!canvas)
 				return;
 
-			var points = [P(100, 400), P(100, 100), P(400, 400), P(400, 100)];
+			var points = [P(100, 250), P(250, 100), P(250, 400), P(400, 250)];
 			slide.bezier = new Bezier(canvas);
 			slide.bezier.draw(points);
 		}
@@ -147,7 +97,7 @@
 			if (!canvas)
 				return;
 
-			var points = [P(100, 400), P(400, 100)];
+			var points = [P(100, 250), P(400, 250)];
 			slide.bezier = new Bezier(canvas);
 			slide.bezier.draw(points);
 		}
