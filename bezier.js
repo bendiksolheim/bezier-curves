@@ -58,19 +58,6 @@
 		ctx.restore();
 	}
 
-	function bezier(ctx) {
-		var points = [];
-		if (arguments.length === 2) {
-			points = arguments[1];
-		} else {
-			for (i = 1; i < arguments.length; i++)
-				points.push(arguments[i]);
-		}
-
-		var supportPoints = computeSupportPoints(points);
-		paintCurve(ctx, supportPoints);
-	}
-
 	function Bezier(canvas, showOnlyOddLines) {
 		if (typeof showOnlyOddLines === 'undefined')
 			showOnlyOddLines = true;
@@ -80,22 +67,29 @@
 		this.showPoints = true;
 		this.showLines = true;
 		this.showOnlyOddLines = showOnlyOddLines;
+		this.showCurve = true;
+		this.showImage = false;
+		this.img = new Image();
+		this.img.src = 'fish.png';
 	}
 
 	Bezier.prototype.draw = function(points) {
 		console.log("Starting visualization for points [" + points.toString() + "]");
 		
 		this.points = points;
-		this.mousedown = mousedown(this.canvas, points);
+		this.mousedown = mousedown(this);
 		this.keydown = keydown(this);
 
 		window.addEventListener('mousedown', this.mousedown, false);
 		window.addEventListener('keydown', this.keydown, false);
 		var bez = this;
 
+		var animDuration = 5000;
+		var last = new Date();
 		function _draw() {
 			bez.timeout = setTimeout(function() {
-				bez.drawScene.apply(bez);
+				var now = new Date();
+				bez.drawScene.apply(bez, [((now - last) % animDuration) / animDuration]);
 				requestAnimationFrame(_draw);
 			}, 1000 / 60);
 		}
@@ -110,17 +104,36 @@
 		window.removeEventListener('keydown', this.keydown);
 	};
 
-	Bezier.prototype.drawScene = function() {
+	Bezier.prototype.drawScene = function(t) {
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			this.ctx.lineWidth = 5;
 			this.ctx.strokeStyle = '#5F505B';
 			if (this.showLines)
 				this.drawLines();
 
-			bezier(this.ctx, this.points);
+			this.drawCurve(this.ctx, t, this.points);
 
 			if (this.showLines)
 				this.drawPoints();
+	};
+
+	Bezier.prototype.drawCurve = function(ctx, t) {
+		var points = [];
+		if (arguments.length === 3) {
+			points = arguments[2];
+		} else {
+			for (i = 2; i < arguments.length; i++)
+				points.push(arguments[i]);
+		}
+
+		var supportPoints = computeSupportPoints(points);
+		if (this.showCurve)
+			paintCurve(ctx, supportPoints);
+
+		if (this.showImage) {
+			var p = supportPoints[Math.floor(t * supportPoints.length)];
+			this.drawImage(p);
+		}
 	};
 
 	Bezier.prototype.drawPoints = function() {
@@ -156,6 +169,25 @@
 		ctx.restore();
 	};
 
+	Bezier.prototype.drawImage = function(p) {
+		var ctx = this.ctx;
+		ctx.save();
+
+		ctx.drawImage(this.img, p.x - (this.img.width / 2), p.y - (this.img.height / 2));
+
+		ctx.restore();
+	};
+
+	Bezier.prototype.update = function(node) {
+		this.updateNode = node;
+
+		var x1 = transform(this.points[1].x);
+		var y1 = transform(this.points[1].y, true);
+		var x2 = transform(this.points[2].x);
+		var y2 = transform(this.points[2].y, true);
+		this.updateNode.innerText = "cubic-bezier(" + x1 + ", " + y1 + ", " + x2 + ", " + y2 + ")";
+	};
+
 	function keydown(bez) {
 		return function(ev) {
 			console.log(ev.keyCode);
@@ -167,10 +199,15 @@
 
 			if (ev.keyCode == 222)
 				bez.showOnlyOddLines = !bez.showOnlyOddLines;
+
+			if (ev.keyCode == 220)
+				bez.showCurve = !bez.showCurve;
 		}
 	};
 
-	function mousedown(canvas, points) {
+	function mousedown(bez) {
+		var canvas = bez.canvas;
+		var points = bez.points;
 		return function(ev) {
 			var node = document.querySelector(".remark-visible .remark-slide-scaler");
 			var curTransform = new WebKitCSSMatrix(window.getComputedStyle(node).webkitTransform);
@@ -199,6 +236,15 @@
 
 				p.x = x;
 				p.y = y;
+
+				if (!bez.updateNode)
+					return;
+
+				var x1 = transform(points[1].x);
+				var y1 = transform(points[1].y, true);
+				var x2 = transform(points[2].x);
+				var y2 = transform(points[2].y, true);
+				bez.updateNode.innerText = "cubic-bezier(" + x1 + ", " + y1 + ", " + x2 + ", " + y2 + ")";
 			}
 
 			function mouseup(mousemove, mouseup) {
@@ -214,6 +260,16 @@
 			canvas.addEventListener('mousemove', mousemove, false);
 			canvas.addEventListener('mouseup', mouseup(mousemove, mouseup), false);
 		};
+	}
+
+	function transform(p, isY) {
+		var ret = -1;
+		if (isY)
+			ret = (1 - ((p - 100) / 300)).toFixed(2);
+		else
+			ret = ((p - 100) / 300).toFixed(2);
+
+		return ret;
 	}
 
 	global.Bezier = Bezier;
