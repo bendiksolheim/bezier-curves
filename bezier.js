@@ -1,5 +1,5 @@
 (function(global) {
-	CanvasRenderingContext2D.prototype.bezier = bezier; 
+	// CanvasRenderingContext2D.prototype.bezier = bezier; 
 
 	function distance(a, b) {
 		return Math.sqrt(Math.pow(a.x-b.x, 2) + Math.pow(a.y-b.y, 2));
@@ -58,17 +58,17 @@
 		ctx.restore();
 	}
 
-	function bezier() {
+	function bezier(ctx) {
 		var points = [];
-		if (arguments.length === 1) {
-			points = arguments[0];
+		if (arguments.length === 2) {
+			points = arguments[1];
 		} else {
-			for (i = 0; i < arguments.length; i++)
+			for (i = 1; i < arguments.length; i++)
 				points.push(arguments[i]);
 		}
 
 		var supportPoints = computeSupportPoints(points);
-		paintCurve(this, supportPoints);
+		paintCurve(ctx, supportPoints);
 	}
 
 	function Bezier(canvas, showOnlyOddLines) {
@@ -117,7 +117,7 @@
 			if (this.showLines)
 				this.drawLines();
 
-			this.ctx.bezier(this.points);
+			bezier(this.ctx, this.points);
 
 			if (this.showLines)
 				this.drawPoints();
