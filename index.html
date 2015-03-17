@@ -37,21 +37,19 @@
 
 		---
 
-		class: center, middle
-
 		<canvas width="500" height="500" id="c2"></canvas>
 
 		---
-
-		class: center, middle
 
 		<canvas width="500" height="500" id="c3"></canvas>
 
 		---
 
-		class: center, middle
-
 		<canvas width="500" height="500" id="c4"></canvas>
+
+		---
+
+		<canvas width="500" height="500" id="c5"></canvas>
 
 		</textarea>
 		<script src="remark.min.js">
@@ -74,6 +72,9 @@
 
 			if (index == 4)
 				slideFour(index, slide);
+
+			if (index == 5)
+				slideFive(index, slide);
 		});
 		slideshow.on('hideSlide', function(slide) {
 			if (slide.bezier) {
@@ -119,7 +120,17 @@
 
 			var points = [P(100, 400), P(100, 100), P(400, 400), P(400, 100)];
 			slide.bezier = new Bezier(canvas);
-			slide.bezier.draw(points);	
+			slide.bezier.draw(points);
+		}
+
+		function slideFive(index, slide) {
+			var canvas = document.querySelector("#c" + index);
+			if (!canvas)
+				return;
+
+			var points = [P(50, 400), P(150, 100), P(250, 400), P(350, 100), P(450, 400)];
+			slide.bezier = new Bezier(canvas, false);
+			slide.bezier.draw(points);
 		}
 		</script>
 	</body>
