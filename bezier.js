@@ -69,6 +69,7 @@
 		this.showOnlyOddLines = showOnlyOddLines;
 		this.showCurve = true;
 		this.showImage = false;
+		this.showHelpLines = false;
 		this.img = new Image();
 		this.img.src = 'fish.png';
 	}
@@ -84,7 +85,7 @@
 		window.addEventListener('keydown', this.keydown, false);
 		var bez = this;
 
-		var animDuration = 5000;
+		var animDuration = 3000;
 		var last = new Date();
 		function _draw() {
 			bez.timeout = setTimeout(function() {
@@ -115,6 +116,9 @@
 
 			if (this.showLines)
 				this.drawPoints();
+
+			if (this.showHelpLines)
+				this.drawHelpLines(t);
 	};
 
 	Bezier.prototype.drawCurve = function(ctx, t) {
@@ -134,6 +138,56 @@
 			var p = supportPoints[Math.floor(t * supportPoints.length)];
 			this.drawImage(p);
 		}
+	};
+
+	Bezier.prototype.drawHelpLines = function(t) {
+		var ctx = this.ctx;
+		ctx.save();
+		var helpPoints = [];
+
+		var tmp = this.points;
+
+		ctx.strokeStyle = '#777';
+		ctx.strokeWidth = 1;
+		while (tmp.length > 1) {
+			var curtmp = [];
+			for (var i = 0; i < tmp.length - 1; i++) {
+				var p1 = tmp[i];
+				var p2 = tmp[i + 1];
+				var x = p1.x + (p2.x - p1.x) * t;
+				var y = p1.y + (p2.y - p1.y) * t;
+				curtmp.push(P(x, y));
+			}
+
+			ctx.beginPath();
+			for (var q = 0; q < curtmp.length - 1; q++) {
+				p1 = curtmp[q];
+				p2 = curtmp[q + 1];
+				ctx.moveTo(p1.x, p1.y);
+				ctx.lineTo(p2.x, p2.y);
+			}
+			ctx.stroke();
+
+			tmp = curtmp.slice(0); //helpPoints.slice(0);
+			helpPoints = helpPoints.concat(curtmp.slice(0));
+		}
+
+		ctx.fillStyle = "#398999";
+		ctx.beginPath();
+		for (var j = 0; j < helpPoints.length; j++) {
+			var p = helpPoints[j];
+			ctx.moveTo(p.x, p.y);
+			ctx.arc(p.x, p.y, 7, 0, 2 * Math.PI, false);
+		}
+		ctx.fill();
+
+		// ctx.beginPath();
+		// for (var k = 0; k < helpPoints.length - 1; k++) {
+		// }
+
+		// ctx.stroke();
+
+		ctx.restore();
 	};
 
 	Bezier.prototype.drawPoints = function() {
@@ -202,6 +256,9 @@
 
 			if (ev.keyCode == 220)
 				bez.showCurve = !bez.showCurve;
+
+			if (ev.keyCode == 76)
+				bez.showHelpLines = !bez.showHelpLines;
 		}
 	};
 
@@ -221,8 +278,6 @@
 					break;
 				}
 			}
-
-			console.log(p);
 
 			if (typeof p === 'undefined')
 				return;
