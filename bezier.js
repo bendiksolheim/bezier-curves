@@ -1,37 +1,33 @@
 (function(global) {
 	// CanvasRenderingContext2D.prototype.bezier = bezier; 
 
-	function distance(a, b) {
-		return Math.sqrt(Math.pow(a.x-b.x, 2) + Math.pow(a.y-b.y, 2));
+	function factorial(n) {
+		if (n == 0 || n == 1)
+			return 1;
+
+		return n * factorial(n - 1);
+	}
+
+	function B(i, n, t) {
+		return factorial(n) / (factorial(i) * factorial(n - i)) * Math.pow(t, i) * Math.pow(1 - t, n - i);
+	}
+
+	function ComputeP(t, points) {
+		var r = P(0, 0);
+		var n = points.length - 1;
+		for (var i = 0; i <= n; i++) {
+			r.x += points[i].x * B(i, n, t);
+			r.y += points[i].y * B(i, n, t);
+		}
+		
+		return r;
 	}
 
 	function computeSupportPoints(points) {
 
-		function fact(k) {
-			if (k == 0 || k == 1)
-				return 1;
-
-			return k * fact(k - 1);
-		}
-
-		function B(i, n, t) {
-			return fact(n) / (fact(i) * fact(n - i)) * Math.pow(t, i) * Math.pow(1 - t, n - i);
-		}
-
-		function ComputeP(t, points) {
-			var r = P(0, 0);
-			var n = points.length - 1;
-			for (var i = 0; i <= n; i++) {
-				r.x += points[i].x * B(i, n, t);
-				r.y += points[i].y * B(i, n, t);
-			}
-			
-			return r;
-		}
-
 		var tLength = 0;
 		for (var i = 0; i < points.length - 1; i++) {
-			tLength += distance(points[i], points[i+1]);
+			tLength += points[i].distance(points[i+1]);
 		}
 		var step = 5 / tLength;
 
@@ -180,13 +176,6 @@
 			ctx.arc(p.x, p.y, 7, 0, 2 * Math.PI, false);
 		}
 		ctx.fill();
-
-		// ctx.beginPath();
-		// for (var k = 0; k < helpPoints.length - 1; k++) {
-		// }
-
-		// ctx.stroke();
-
 		ctx.restore();
 	};
 
@@ -328,27 +317,4 @@
 	}
 
 	global.Bezier = Bezier;
-
-	global.P = function(x, y, radius) {
-		if (typeof radius === 'undefined')
-			radius = 5;
-
-		return new Point(x, y, radius);
-	};
-
-	function Point(x, y, radius) {
-		this.x = x;
-		this.y = y;
-		this.radius = radius;
-	}
-
-	Point.prototype.hit = function(x, y) {
-		var r = this.radius + 2;
-		var hit = (Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2)) < (r * r);
-		return hit;
-	};
-
-	Point.prototype.toString = function() {
-		return "{" + this.x + ", " + this.y + "}";
-	};
 })(window);
