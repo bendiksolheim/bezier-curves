@@ -1,0 +1,41 @@
+{
+  "name": "bezier-curves",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Lightning speach about bézier curves with interactive slide set",
+  "main": "bezier.js",
+  "scripts": {
+    "start": "node server.js",
+    "postinstall": "npm run build; npm run preprocess",
+    "watch-css": "wr 'lessc --include-path=app/styles/ app/styles/app.less app/static/bundle.css' app/styles/",
+    "watch-js": "watchify js/app.js -o out.js -dv",
+    "watch": "npm run watch-css & npm run watch-js",
+    "preprocess": "autoprefixer app/static/bundle.css",
+    "build-css": "lessc app/styles/app.less app/static/bundle.css",
+    "build-js": "browserify app/scripts/app.js > app/static/bundle.js",
+    "build": "npm run build-css && npm run build-js",
+    "dev": "npm start & npm run watch"
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bendiksolheim/bezier-curves.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bendiksolheim/bezier-curves/issues"
+  },
+  "homepage": "https://github.com/bendiksolheim/bezier-curves",
+  "devDependencies": {
+    "babel": "^4.7.16",
+    "babelify": "^5.0.4",
+    "browserify": "^9.0.3",
+    "watchify": "^2.6.0"
+  },
+  "dependencies": {}
+}
