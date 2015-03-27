@@ -8,7 +8,7 @@
     "start": "node server.js",
     "postinstall": "npm run build; npm run preprocess",
     "watch-css": "wr 'lessc --include-path=app/styles/ app/styles/app.less app/static/bundle.css' app/styles/",
-    "watch-js": "watchify js/app.js -o out.js -dv",
+    "watch-js": "watchify app/scripts/app.js -o app/static/bundle.js -dv",
     "watch": "npm run watch-css & npm run watch-js",
     "preprocess": "autoprefixer app/static/bundle.css",
     "build-css": "lessc app/styles/app.less app/static/bundle.css",
