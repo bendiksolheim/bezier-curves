@@ -60,7 +60,7 @@ function Bezier(canvas, showOnlyOddLines) {
 	this.showImage = false;
 	this.showHelpLines = false;
 	this.img = new Image();
-	this.img.src = 'fish.png';
+	this.img.src = 'img/fish.png';
 }
 
 Bezier.prototype.draw = function(points) {
